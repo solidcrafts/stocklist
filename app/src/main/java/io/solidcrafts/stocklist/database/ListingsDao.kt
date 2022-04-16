@@ -9,7 +9,7 @@ import androidx.room.Query
 interface ListingsDao {
 
     @Insert(onConflict = REPLACE)
-    suspend fun insertListings(vararg listings: ListingEntity)
+    suspend fun insertListings(list: List<ListingEntity>)
 
     @Query("DELETE FROM listingentity")
     suspend fun clearAll()
