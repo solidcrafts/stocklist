@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ListingsRepository {
     suspend fun getListings(
-        fetchRemote: Boolean,
-        query: String
+        fetchRemote: Boolean = false,
+        query: String = ""
     ): Flow<Data<List<Listing>>>
 }
