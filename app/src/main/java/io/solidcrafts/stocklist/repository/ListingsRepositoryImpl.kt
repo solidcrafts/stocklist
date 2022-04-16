@@ -1,12 +1,13 @@
 package io.solidcrafts.stocklist.repository
 
-import io.solidcrafts.stocklist.csv.ListingsCsvParser
+import io.solidcrafts.stocklist.csv.CsvParser
 import io.solidcrafts.stocklist.database.ListingsDatabase
+import io.solidcrafts.stocklist.database.toDomainListings
 import io.solidcrafts.stocklist.domain.Data
 import io.solidcrafts.stocklist.domain.Listing
-import io.solidcrafts.stocklist.mappers.toDatabaseListings
-import io.solidcrafts.stocklist.mappers.toDomainListings
 import io.solidcrafts.stocklist.remote.AlphaVantageApi
+import io.solidcrafts.stocklist.remote.ListingRemote
+import io.solidcrafts.stocklist.remote.toDatabaseListings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -17,7 +18,7 @@ import kotlin.Exception
 class ListingsRepositoryImpl @Inject constructor(
     private val remoteApi: AlphaVantageApi,
     private val database: ListingsDatabase,
-    private val remoteParser: ListingsCsvParser
+    private val remoteParser: CsvParser<ListingRemote>
 ) : ListingsRepository {
 
     override suspend fun getListings(
@@ -29,7 +30,7 @@ class ListingsRepositoryImpl @Inject constructor(
 
             val listings = database.dao.getListings(query)
             if (!fetchRemote && listings.isNotEmpty()) {
-                emit(Data.Success(listings.toDomainListings()))
+                emit(Data.Success(listings.map { it.toDomainListings() }))
                 emit(Data.Loading(false))
                 return@flow
             }
@@ -45,10 +46,10 @@ class ListingsRepositoryImpl @Inject constructor(
                 null
             }
 
-            remoteListings?.let {
-                database.dao.insertListings(it.toDatabaseListings())
+            remoteListings?.let { data ->
+                database.dao.insertListings(data.map { it.toDatabaseListings() })
                 val updatedListings = database.dao.getListings(query)
-                emit(Data.Success(updatedListings.toDomainListings()))
+                emit(Data.Success(updatedListings.map { it.toDomainListings() }))
                 emit(Data.Loading(false))
             }
         }
