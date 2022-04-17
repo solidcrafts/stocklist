@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import io.solidcrafts.stocklist.databinding.FragmentListingBinding
 import io.solidcrafts.stocklist.ui.listings_screen.ListingsFragmentEvent.*
 
+@AndroidEntryPoint
 class ListingFragment : Fragment() {
     private val listingsFragmentViewModel: ListingsFragmentViewModel by viewModels()
 
