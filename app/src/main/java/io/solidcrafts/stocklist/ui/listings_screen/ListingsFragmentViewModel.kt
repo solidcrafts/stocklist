@@ -19,9 +19,7 @@ class ListingsFragmentViewModel @Inject constructor(
     private val repository: ListingsRepository
 ) : ViewModel() {
 
-    init {
-        updateListings(false, "")
-    }
+
 
     private var searchJob: Job? = null
 
@@ -30,6 +28,13 @@ class ListingsFragmentViewModel @Inject constructor(
 
     private val _listings: MutableLiveData<List<Listing>> = MutableLiveData(listOf())
     val listings: LiveData<List<Listing>> = _listings
+
+    private val _loading: MutableLiveData<Boolean> = MutableLiveData(false)
+    val loading: LiveData<Boolean> = _loading
+
+    init {
+        updateListings(false, "")
+    }
 
     fun handleEvent(event: ListingsFragmentEvent) {
         when (event) {
@@ -48,7 +53,7 @@ class ListingsFragmentViewModel @Inject constructor(
 
                     }
                     is Data.Loading -> {
-
+                        _loading.postValue(it.isLoading)
                     }
                     is Data.Success -> {
                         it.data?.let { updatedList ->

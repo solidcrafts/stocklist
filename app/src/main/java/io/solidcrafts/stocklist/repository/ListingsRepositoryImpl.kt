@@ -8,6 +8,7 @@ import io.solidcrafts.stocklist.domain.Listing
 import io.solidcrafts.stocklist.remote.AlphaVantageApi
 import io.solidcrafts.stocklist.remote.ListingRemote
 import io.solidcrafts.stocklist.remote.toDatabaseListings
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -27,7 +28,7 @@ class ListingsRepositoryImpl @Inject constructor(
     ): Flow<Data<List<Listing>>> {
         return flow {
             emit(Data.Loading(true))
-
+            delay(3000)//temp
             val listings = database.dao.getListings(query)
             if (!fetchRemote && listings.isNotEmpty()) {
                 emit(Data.Success(listings.map { it.toDomainListings() }))

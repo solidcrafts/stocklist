@@ -20,6 +20,7 @@ class ListingFragment : Fragment() {
     ): View {
         val binding = FragmentListingBinding.inflate(inflater)
         binding.lifecycleOwner = this
+        binding.viewModel = listingsFragmentViewModel
 
         listingsFragmentViewModel.listings.observe(viewLifecycleOwner) {
             println("size: ${it.size}")
