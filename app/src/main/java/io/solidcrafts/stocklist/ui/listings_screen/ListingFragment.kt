@@ -22,8 +22,12 @@ class ListingFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = listingsFragmentViewModel
 
+        binding.recycler.adapter = ListingsAdapter(ListingClickListener {
+
+        })
+
         listingsFragmentViewModel.listings.observe(viewLifecycleOwner) {
-            println("size: ${it.size}")
+            (binding.recycler.adapter as ListingsAdapter).submitList(it)
         }
 
         listingsFragmentViewModel.navigateToListingDetails.observe(viewLifecycleOwner) {

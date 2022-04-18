@@ -27,6 +27,7 @@
             app:visible_if_true="@{viewModel.loading}" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:clipToPadding="false"
